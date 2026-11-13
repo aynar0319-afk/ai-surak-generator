@@ -49,3 +49,5 @@ def extract_text_from_files(uploaded_files) -> dict:
         "full_text": "\n\n".join([p["text"] for p in pages_content]),
         "empty_files": empty_files
     }
+
+#————————————————————————————————————————————————————————————————————by Aynar

@@ -98,3 +98,5 @@ def delete_question(q_id: int):
     cursor.execute("DELETE FROM questions WHERE id = ?", (q_id,))
     conn.commit()
     conn.close()
+
+#————————————————————————————————————————————————————————————————————by Aynar
