@@ -199,3 +199,5 @@ def verify_questions(client: genai.Client, questions: list, model: str = "gemini
     
     result = json.loads(raw_text)
     return result.get("verified_questions", questions)
+
+#————————————————————————————————————————————————————————————————————by Aynar
