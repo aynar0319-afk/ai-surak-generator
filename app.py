@@ -10,6 +10,7 @@ from ai_engine import (
     extract_topics,
     generate_questions,
     evaluate_user_answers,
+    verify_questions,
     DIFFICULTY_DESCRIPTIONS
 )
 from database import (
@@ -144,6 +145,12 @@ with tab1:
                                     num_questions=num_questions,
                                     difficulty=difficulty,
                                     question_type=question_type,
+                                    model=model_name.strip()
+                                )
+                            with st.spinner("AI сұрақтардың сапасын тексеріп жатыр..."):
+                                questions = verify_questions(
+                                    client=client,
+                                    questions=questions,
                                     model=model_name.strip()
                                 )
                             

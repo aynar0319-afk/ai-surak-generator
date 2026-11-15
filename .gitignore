@@ -15,5 +15,5 @@ venv/
 # Local database
 *.db
 
-
+#save uploaded files
 uploads/
