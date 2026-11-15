@@ -1,3 +1,5 @@
 streamlit
 pymupdf
 google-genai
+pandas
+openpyxl
