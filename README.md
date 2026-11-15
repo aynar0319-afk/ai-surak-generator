@@ -45,6 +45,7 @@ ai-surak-generator/
 ├── questions.db
 ├── requirements.txt
 ├── README.md
+├── manual_review.xlsx
 └── .gitignore
 ```
 
@@ -75,6 +76,10 @@ python -m venv venv
 Windows жүйесінде виртуалды ортаны іске қосу:
 
 ```bash
+# macOS / Linux
+source venv/bin/activate
+
+# Windows
 venv\Scripts\activate
 ```
 
