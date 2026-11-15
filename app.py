@@ -1,6 +1,8 @@
 # app.py
 import json
 import streamlit as st
+from pathlib import Path
+import hashlib
 from doc_processor import extract_text_from_files, process_document_data
 from database import export_to_csv, export_to_excel
 from ai_engine import (
@@ -53,6 +55,18 @@ with tab1:
     if uploaded_files:
         current_names = [f.name for f in uploaded_files]
         if "doc_data" not in st.session_state or st.session_state["doc_data"]["filenames"] != current_names:
+            UPLOAD_DIR = Path("uploads")
+            UPLOAD_DIR.mkdir(exist_ok=True)
+
+            for uploaded_file in uploaded_files:
+                file_bytes = uploaded_file.getvalue()
+                file_hash = hashlib.sha256(file_bytes).hexdigest()[:12]
+                safe_name = Path(uploaded_file.name).name
+                save_path = UPLOAD_DIR / f"{file_hash}_{safe_name}"
+
+                if not save_path.exists():
+                   save_path.write_bytes(file_bytes)
+
             with st.spinner("Құжаттардан мәтін алынуда..."):
                 # Құжаттардан мәтінді алу
                 document_data = extract_text_from_files(uploaded_files)
