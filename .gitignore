@@ -1,5 +1,16 @@
+
+# Python
 __pycache__/
-*.pyc
-.DS_Store
-questions.db
+*.py[cod]
+.venv/
+venv/
+
+# PyCharm
+.idea/
+
+# Secrets
 .env
+.env.*
+
+# Local database
+*.db

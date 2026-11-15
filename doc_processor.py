@@ -51,3 +51,61 @@ def extract_text_from_files(uploaded_files) -> dict:
     }
 
 #————————————————————————————————————————————————————————————————————by Aynar
+
+import re
+
+
+def clean_text(text: str) -> str:
+    """
+    Құжаттан алынған мәтінді тазалайды.
+    Артық бос орындар мен қажетсіз бос жолдарды жояды.
+    """
+
+    # Мәтіндегі бірнеше бос орынды бір бос орынға ауыстыру
+    text = re.sub(r"[ \t]+", " ", text)
+
+    # Артық бос жолдарды азайту
+    text = re.sub(r"\n\s*\n+", "\n\n", text)
+
+    # Мәтіннің басы мен соңындағы бос орындарды жою
+    text = text.strip()
+
+    return text
+
+
+def process_document_data(document_data: dict) -> dict:
+    """
+    Алынған құжат мәтіндерін тазалап,
+    бөлімдер бойынша қайта өңдейді.
+    """
+
+    # Өңделген бөлімдерді сақтау
+    cleaned_pages = []
+
+    # Әр бөлімдегі мәтінді тазалау
+    for page in document_data["pages"]:
+        cleaned_content = clean_text(page["text"])
+
+        # Бос емес бөлімдерді ғана сақтау
+        if cleaned_content:
+            cleaned_pages.append({
+                "section": page["section"],
+                "text": cleaned_content
+            })
+
+    # Барлық тазаланған мәтінді біріктіру
+    full_text = "\n\n".join(
+        page["text"] for page in cleaned_pages
+    )
+
+    # Нәтижені бастапқы деректер құрылымында қайтару
+    return {
+        "filenames": document_data["filenames"],
+        "display_name": document_data["display_name"],
+        "pages": cleaned_pages,
+        "full_text": full_text,
+        "empty_files": document_data["empty_files"]
+    }
+
+
+#————————————————————————————————————————————————————————————————————by Arayle

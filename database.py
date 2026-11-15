@@ -100,3 +100,70 @@ def delete_question(q_id: int):
     conn.close()
 
 #————————————————————————————————————————————————————————————————————by Aynar
+import pandas as pd
+import io
+
+def export_to_csv():
+    """
+    Деректер қорындағы барлық сұрақтарды CSV форматына экспорттау.
+    """
+
+    # Деректер қорынан барлық сұрақтарды алу
+    questions = get_all_questions()
+
+    # Егер деректер қоры бос болса, None мәнін қайтару
+    if not questions:
+        return None
+
+    # Сұрақтар тізімін кесте форматына түрлендіру
+    df = pd.DataFrame(questions)
+
+    # Жауап нұсқаларын JSON мәтініне түрлендіру
+    df["options"] = df["options"].apply(
+        lambda x: json.dumps(x, ensure_ascii=False)
+    )
+
+    # Мәліметтерді CSV форматына түрлендіру
+    # UTF-8-SIG кодтауы қазақ әріптерінің дұрыс көрсетілуіне көмектеседі
+    csv_data = df.to_csv(index=False).encode("utf-8-sig")
+
+    # Дайын CSV деректерін қайтару
+    return csv_data
+
+
+def export_to_excel():
+    """
+    Деректер қорындағы барлық сұрақтарды Excel форматына экспорттау.
+    """
+
+    # Деректер қорынан барлық сұрақтарды алу
+    questions = get_all_questions()
+
+    # Егер деректер қоры бос болса, None мәнін қайтару
+    if not questions:
+        return None
+
+    # Сұрақтар тізімін кесте форматына түрлендіру
+    df = pd.DataFrame(questions)
+
+    # Жауап нұсқаларын JSON мәтініне түрлендіру
+    df["options"] = df["options"].apply(
+        lambda x: json.dumps(x, ensure_ascii=False)
+    )
+
+    # Excel файлын уақытша жадта құру
+    output = io.BytesIO()
+
+    # Мәліметтерді Excel файлына жазу
+    with pd.ExcelWriter(output, engine="openpyxl") as writer:
+        df.to_excel(
+            writer,
+            index=False,
+            sheet_name="Questions"
+        )
+
+    # Дайын Excel файлының деректерін қайтару
+    return output.getvalue()
+#————————————————————————————————————————————————————————————————————by Arayle
+
+

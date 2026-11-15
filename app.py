@@ -1,7 +1,8 @@
 # app.py
 import json
 import streamlit as st
-from doc_processor import extract_text_from_files
+from doc_processor import extract_text_from_files, process_document_data
+from database import export_to_csv, export_to_excel
 from ai_engine import (
     get_ai_client,
     extract_topics,
@@ -53,7 +54,14 @@ with tab1:
         current_names = [f.name for f in uploaded_files]
         if "doc_data" not in st.session_state or st.session_state["doc_data"]["filenames"] != current_names:
             with st.spinner("Құжаттардан мәтін алынуда..."):
-                st.session_state["doc_data"] = extract_text_from_files(uploaded_files)
+                # Құжаттардан мәтінді алу
+                document_data = extract_text_from_files(uploaded_files)
+
+                # Құжат мәтіндерін тазалау және өңдеу
+                document_data = process_document_data(document_data)
+
+                # Өңделген деректерді сақтау
+                st.session_state["doc_data"] = document_data
                 st.session_state["topics"] = []
                 st.session_state["latest_questions"] = []
                 st.session_state["checked_answers"] = {}
@@ -274,3 +282,36 @@ with tab2:
                             st.rerun()
 
 #————————————————————————————————————————————————————————————————————by Aynar
+
+    st.divider()
+    st.subheader("📥 Сұрақтарды экспорттау")
+
+    # CSV форматына экспорттау
+    csv_data = export_to_csv()
+
+    if csv_data is not None:
+        st.download_button(
+            label="📥 CSV форматында жүктеу",
+            data=csv_data,
+            file_name="generated_questions.csv",
+            mime="text/csv",
+            key="arayle_csv_export"
+        )
+    else:
+        st.info("CSV экспорттау үшін алдымен сұрақтарды сақтаңыз.")
+
+    # Excel форматына экспорттау
+    excel_data = export_to_excel()
+
+    if excel_data is not None:
+        st.download_button(
+            label="📥 Excel форматында жүктеу",
+            data=excel_data,
+            file_name="generated_questions.xlsx",
+            mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            key="arayle_excel_export"
+        )
+    else:
+        st.info("Excel экспорттау үшін алдымен сұрақтарды сақтаңыз.")
+#————————————————————————————————————————————————————————————————————by Arayle
+
